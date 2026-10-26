@@ -6,6 +6,7 @@ using StockPilot.Api.Models;
 using StockPilot.Api.DTOs;
 
 
+
 namespace StockPilot.Api.Controllers
 {
     [Route("api/[controller]")]
@@ -86,6 +87,46 @@ namespace StockPilot.Api.Controllers
                 product
             );
         }
+
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct(
+            int id, UpdateProductDto request)
+        {
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null)
+            {
+                return NotFound("Product not found.");
+            }
+
+            string name = request.Name?.Trim() ?? "";
+            string sku = request.SKU?.Trim().ToUpperInvariant() ?? "";
+
+            if (string.IsNullOrWhiteSpace(name) ||
+                string.IsNullOrWhiteSpace(sku))
+            {
+                return BadRequest("Product name and SKU are required.");
+            }
+
+            bool skuExists = await _context.Products
+                .AnyAsync(p => p.SKU == sku && p.Id != id);
+
+            if (skuExists)
+            {
+                return Conflict("Another product already uses this SKU.");
+            }
+
+            product.Name = name;
+            product.SKU = sku;
+            product.Price = request.Price;
+            product.ReorderLevel = request.ReorderLevel;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
 
     }
 }

@@ -44,3 +44,30 @@ Content-Type: application/json
   "quantity": 10,
   "reorderLevel": 5
 }
+
+
+### Update product ID 1
+PUT http://localhost:5164/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Wireless Gaming Keyboard",
+  "sku": "KEY-001",
+  "price": 599.99,
+  "reorderLevel": 10
+}
+
+### Verify updated product
+GET http://localhost:5164/api/products/1
+Accept: application/json
+
+### Test updating a missing product
+PUT http://localhost:5164/api/products/99999
+Content-Type: application/json
+
+{
+  "name": "Gaming Mouse",
+  "sku": "MOU-001",
+  "price": 250.00,
+  "reorderLevel": 5
+}
