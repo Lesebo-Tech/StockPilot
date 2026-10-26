@@ -1,6 +1,46 @@
+
 @StockPilot.Api_HostAddress = http://localhost:5164
 
-GET {{StockPilot.Api_HostAddress}}/weatherforecast/
+### 1. Get all products
+GET {{StockPilot.Api_HostAddress}}/api/products
 Accept: application/json
 
-###
+### 2. Get a product by ID
+GET {{StockPilot.Api_HostAddress}}/api/products/1
+Accept: application/json
+
+### 3. Create a new product
+POST {{StockPilot.Api_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Wireless Keyboard",
+  "sku": "KEY-001",
+  "price": 450.00,
+  "quantity": 20,
+  "reorderLevel": 5
+}
+
+### 4. Test duplicate SKU
+POST {{StockPilot.Api_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Another Keyboard",
+  "sku": "KEY-001",
+  "price": 500.00,
+  "quantity": 10,
+  "reorderLevel": 5
+}
+
+### 5. Test invalid price
+POST {{StockPilot.Api_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Computer Mouse",
+  "sku": "MOU-001",
+  "price": -50,
+  "quantity": 10,
+  "reorderLevel": 5
+}

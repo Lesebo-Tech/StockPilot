@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StockPilot.Api.Data;
 using StockPilot.Api.Models;
+using StockPilot.Api.DTOs;
+
 
 namespace StockPilot.Api.Controllers
 {
@@ -43,5 +45,47 @@ namespace StockPilot.Api.Controllers
 
             return Ok(product);
         }
+
+
+        [HttpPost]
+        public async Task<ActionResult<Product>> CreateProduct(
+            CreateProductDto request)
+        {
+            string name = request.Name?.Trim() ?? "";
+            string sku = request.SKU?.Trim().ToUpperInvariant() ?? "";
+
+            if (string.IsNullOrWhiteSpace(name) ||
+                string.IsNullOrWhiteSpace(sku))
+            {
+                return BadRequest("Product name and SKU are required.");
+            }
+
+            bool skuExists = await _context.Products
+                .AnyAsync(p => p.SKU == sku);
+
+            if (skuExists)
+            {
+                return Conflict("A product with this SKU already exists.");
+            }
+
+            var product = new Product
+            {
+                Name = name,
+                SKU = sku,
+                Price = request.Price,
+                Quantity = request.Quantity,
+                ReorderLevel = request.ReorderLevel
+            };
+
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(
+                nameof(GetProduct),
+                new { id = product.Id },
+                product
+            );
+        }
+
     }
 }
