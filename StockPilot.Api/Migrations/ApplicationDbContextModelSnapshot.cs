@@ -51,6 +51,9 @@ namespace StockPilot.Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SKU")
+                        .IsUnique();
+
                     b.ToTable("Products");
                 });
 #pragma warning restore 612, 618
