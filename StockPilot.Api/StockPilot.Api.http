@@ -71,3 +71,14 @@ Content-Type: application/json
   "price": 250.00,
   "reorderLevel": 5
 }
+
+
+### Stock In - Receive 15 keyboards
+POST http://localhost:5164/api/inventory/stock-in
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 15,
+  "reason": "Received new stock from supplier"
+}
