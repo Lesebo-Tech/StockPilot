@@ -83,3 +83,26 @@ Content-Type: application/json
   "quantity": 15,
   "reason": "Received new stock from supplier"
 }
+
+### Stock Out - Customer Purchase
+POST http://localhost:5164/api/inventory/stock-out
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 5,
+  "reason": "Customer purchase"
+}
+
+### Check API connection
+GET http://localhost:5164/api/products
+
+### Stock Out
+POST http://localhost:5164/api/inventory/stock-out
+Content-Type: application/json
+
+{
+  "productId": 1,
+  "quantity": 5,
+  "reason": "Customer purchase"
+}
