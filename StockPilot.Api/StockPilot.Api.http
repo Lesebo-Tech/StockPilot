@@ -57,7 +57,8 @@ Content-Type: application/json
   "reorderLevel": 10
 }
 
-### Verify updated product
+
+### Verify Product After Stock In
 GET http://localhost:5164/api/products/1
 Accept: application/json
 

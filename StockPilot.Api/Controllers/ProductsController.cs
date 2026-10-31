@@ -127,6 +127,45 @@ namespace StockPilot.Api.Controllers
             return NoContent();
         }
 
+        // POST: api/products/1/stock-out
+        [HttpPost("{id}/stock-out")]
+        public async Task<IActionResult> StockOut(
+            int id, StockOutDto request)
+        {
+            // Find the product
+            var product = await _context.Products.FindAsync(id);
+
+            if (product == null)
+            {
+                return NotFound("Product not found.");
+            }
+
+            // Validate quantity
+            if (request.Quantity <= 0)
+            {
+                return BadRequest("Quantity must be greater than zero.");
+            }
+
+            // Check available stock
+            if (product.Quantity < request.Quantity)
+            {
+                return BadRequest("Insufficient stock available.");
+            }
+
+            // Remove stock
+            product.Quantity -= request.Quantity;
+
+            // Save changes
+            await _context.SaveChangesAsync();
+
+            return Ok(new
+            {
+                Message = "Stock removed successfully.",
+                ProductId = product.Id,
+                RemainingQuantity = product.Quantity
+            });
+        }
+
 
     }
 }
